@@ -2,11 +2,11 @@
     "name":             "designate",
     "version":          "0.0.0",
     "author":           "Alan Gutierrez <alan@prettyrobots.com>",
-    "description":      "Forward and reverse iteration of a Strata b-tree.",
+    "description":      "Iterate a collection of MVCC b-tree cursors choosing the most recent version of a record from each tree.",
     "url":              "http://bigeasy.github.com/designate",
     "keywords":
     [
-                        "btree", "leveldb", "levelup", "binary",
+                        "btree", "leveldb", "levelup", "binary", "mvcc",
                         "database", "json", "b-tree", "concurrent", "persistence"
     ],
     "contributors":     [],

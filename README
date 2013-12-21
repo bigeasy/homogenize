@@ -1,6 +1,7 @@
 Designate
 
-TODO TODO TODO.
+Iterate a collection of MVCC b-tree cursors choosing the most recent version of
+a record from each tree.
 
     Documentation:  http://bigeasy.github.io/designate
     Source:         http://github.com/bigeasy/designate
