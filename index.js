@@ -1,1 +1,82 @@
-module.exports = 1
+var cadence = require('cadence')
+
+function Merge (comparator, deleted, forward) {
+    var negate = forward ? 1 : -1
+
+    this._iterations = []
+    this._locked = []
+    this._comparator = comparator
+    this._deleted = deleted
+    this._versioned = function (a, b) {
+        var compare = comparator(a.key.value, b.key.value) * negate
+        if (compare) return compare
+        return b.key.version - a.key.version
+    }
+}
+
+Merge.prototype._advance = cadence(function (step, iterations) {
+    step(function (iteration) {
+        step(function () {
+            iteration.iterator.next(step())
+        }, function (record, key) {
+            if (record && key) {
+                iteration.record = record
+                iteration.key = key
+                this._iterations.push(iteration)
+            } else {
+                this._locked.push(iteration.iterator)
+            }
+        })
+    })(iterations)
+})
+
+Merge.prototype.unlock = function () {
+    this._iterations.forEach(function (iteration) { iteration.iterator.unlock() })
+    this._locked.forEach(function (iterator) { iterator.unlock() })
+}
+
+Merge.prototype._candidate = function (winner) {
+    return this._iterations.length &&
+           this._comparator(winner.key.value, this._iterations[0].key.value) == 0
+}
+
+Merge.prototype.next = cadence(function (step) {
+    if (!this._iterations.length) return step(null)
+
+    var consumed = []
+
+    this._iterations.sort(this._versioned)
+
+    consumed.push(this._iterations.shift())
+
+    while (this._candidate(consumed[0])) {
+        consumed.push(this._iterations.shift())
+    }
+
+    var winner = [ consumed[0].record, consumed[0].key ]
+
+    step(function () {
+        this._advance(consumed, step())
+    }, function () {
+        if (this._deleted(winner[0])) this._next(step())
+        else step(null, winner[0], winner[1])
+    })
+})
+
+var prime = cadence(function (step, merge, iterators) {
+    step(function () {
+        merge._advance(iterators.map(function (iterator) {
+            return { iterator: iterator }
+        }), step())
+    }, function () {
+        return merge
+    })
+})
+
+exports.forward = function (comparator, deleted, iterators, callback) {
+    prime(new Merge(comparator, deleted, true), iterators, callback)
+}
+
+exports.reverse = function (comparator, deleted, iterators, callback) {
+    prime(new Merge(comparator, deleted, false), iterators, callback)
+}
