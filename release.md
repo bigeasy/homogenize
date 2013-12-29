@@ -13,5 +13,6 @@ We now test the following conditions.
 
 ### Issue by Issue
 
+ * Upgrade Skip to 0.0.3. #13.
  * Upgrade Skip to 0.0.2. #12.
  * Test that invalid versions are excluded. #11.
