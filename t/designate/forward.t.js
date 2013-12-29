@@ -1,8 +1,10 @@
-require('./proof')(1, function (step, serialize, deepEqual, Strata, tmp) {
+require('./proof')(2, function (step, serialize, deepEqual, Strata, tmp) {
     var designate = require('../..')
     var skip = require('skip')
     var mvcc = require('mvcc')
     var fs = require('fs')
+    var valid = {}
+    ; [ 0, 1, 2, 3, 4 ].forEach(function (version) { valid[version] = true })
     function deleted () {
         return false
     }
@@ -34,22 +36,23 @@ require('./proof')(1, function (step, serialize, deepEqual, Strata, tmp) {
             })
         }))
     }, function (stratas) {
+        var records = [], versions = []
         step(function () {
             stratas.forEach(step([], function (strata) {
-                skip.forward(strata, comparator, { 0: true }, 'a', step())
+                skip.forward(strata, comparator, valid, 'a', step())
             }))
         }, function (iterators) {
             designate.forward(comparator, deleted, iterators, step())
         }, function (iterator) {
-            var records = []
             step(function () {
                 step(function () {
                     iterator.next(step())
                 }, function (record) {
                     if (record) {
                         records.push(record.value)
+                        versions.push(record.version)
                     } else {
-                        step(null, records)
+                        step(null)
                     }
                 })()
             }, function () {
@@ -59,6 +62,7 @@ require('./proof')(1, function (step, serialize, deepEqual, Strata, tmp) {
             })
         }, function (records) {
             deepEqual(records, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'records')
+            deepEqual(versions, [ 0, 3, 2, 0, 3, 2, 0, 4, 2 ], 'versions')
         }, function () {
             step(function (strata) {
                 strata.close(step())
