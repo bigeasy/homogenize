@@ -39,7 +39,7 @@ require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
         var records = [], versions = []
         step(function () {
             stratas.forEach(step([], function (strata) {
-                skip.forward(strata, comparator, valid, 'a', visited, step())
+                skip.forward(strata, comparator, valid, visited, 'a', step())
             }))
         }, function (iterators) {
             designate.forward(comparator, deleted, iterators, step())
