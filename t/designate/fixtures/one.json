@@ -5,7 +5,6 @@
     "1": {
         "log": [
             { "type": "pos" },
-            { "type": "add", "value": { "value": "a", "version": 0 } },
             { "type": "add", "value": { "value": "b", "version": 1 } },
             { "type": "add", "value": { "value": "c", "version": 2 } },
             { "type": "pos" }
@@ -17,7 +16,7 @@
             { "type": "pos" },
             { "type": "add", "value": { "value": "g", "version": 0 } },
             { "type": "add", "value": { "value": "h", "version": 1 } },
-            { "type": "add", "value": { "value": "i", "version": 2 } },
+            { "type": "add", "value": { "value": "i", "version": 2, "deleted": true } },
             { "type": "pos" }
         ]
     },

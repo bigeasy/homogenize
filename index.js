@@ -60,7 +60,7 @@ Merge.prototype.next = cadence(function (step) {
     step(function () {
         this._advance(consumed, step())
     }, function () {
-        if (this._deleted(winner[0])) this._next(step())
+        if (this._deleted(winner[0])) this.next(step())
         else step(null, winner[0], winner[1])
     })
 })
