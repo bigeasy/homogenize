@@ -13,6 +13,7 @@ We now test the following conditions.
 
 ### Issue by Issue
 
+ * Place all locked iterators in `_iterators`. #16.
  * Implement reverse iterators. #14.
  * Upgrade Skip to 0.0.3. #13.
  * Upgrade Skip to 0.0.2. #12.

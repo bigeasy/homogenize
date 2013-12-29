@@ -1,10 +1,10 @@
 var cadence = require('cadence')
 
-function Merge (comparator, deleted, forward) {
+function Merge (comparator, deleted, iterators, forward) {
     var negate = forward ? 1 : -1
 
     this._iterations = []
-    this._locked = []
+    this._iterators = iterators
     this._comparator = comparator
     this._deleted = deleted
     this._versioned = function (a, b) {
@@ -28,16 +28,13 @@ Merge.prototype._advance = cadence(function (step, iterations) {
                 iteration.record = record
                 iteration.key = key
                 this._iterations.push(iteration)
-            } else {
-                this._locked.push(iteration.iterator)
             }
         })
     })(iterations)
 })
 
 Merge.prototype.unlock = function () {
-    this._iterations.forEach(function (iteration) { iteration.iterator.unlock() })
-    this._locked.forEach(function (iterator) { iterator.unlock() })
+    this._iterators.forEach(function (iterator) { iterator.unlock() })
 }
 
 Merge.prototype._candidate = function (winner) {
@@ -79,9 +76,9 @@ var prime = cadence(function (step, merge, iterators) {
 })
 
 exports.forward = function (comparator, deleted, iterators, callback) {
-    prime(new Merge(comparator, deleted, true), iterators, callback)
+    prime(new Merge(comparator, deleted, iterators, true), iterators, callback)
 }
 
 exports.reverse = function (comparator, deleted, iterators, callback) {
-    prime(new Merge(comparator, deleted, false), iterators, callback)
+    prime(new Merge(comparator, deleted, iterators, false), iterators, callback)
 }
