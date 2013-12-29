@@ -3,8 +3,8 @@ require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
     var skip = require('skip')
     var mvcc = require('mvcc')
     var fs = require('fs')
-    var valid = {}
-    ; [ 0, 1, 2, 3, 4 ].forEach(function (version) { valid[version] = true })
+    var valid = {}, visited = {}
+    ; [ 0, 1, 2, 4 ].forEach(function (version) { valid[version] = true })
     function deleted () {
         return false
     }
@@ -39,10 +39,9 @@ require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
         var records = [], versions = []
         step(function () {
             stratas.forEach(step([], function (strata) {
-                skip.forward(strata, comparator, valid, 'a', step())
+                skip.forward(strata, comparator, valid, 'a', visited, step())
             }))
         }, function (iterators) {
-            console.log(iterators)
             designate.forward(comparator, deleted, iterators, step())
         }, function (iterator) {
             step(function () {
@@ -57,12 +56,12 @@ require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
                     }
                 })()
             }, function () {
-                deepEqual(iterator.versions.sort(),  [ 0, 1, 2, 3, 4 ], 'versions')
+                deepEqual(Object.keys(visited).sort(),  [ 0, 1, 2, 3, 4 ], 'versions')
                 iterator.unlock()
             })
         }, function () {
             deepEqual(records, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'records')
-            deepEqual(versions, [ 0, 3, 2, 0, 3, 2, 0, 4, 2 ], 'versions')
+            deepEqual(versions, [ 0, 1, 2, 0, 1, 2, 0, 4, 2 ], 'versions')
         }, function () {
             step(function (strata) {
                 strata.close(step())
