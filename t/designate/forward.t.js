@@ -1,4 +1,4 @@
-require('./proof')(2, function (step, serialize, deepEqual, Strata, tmp) {
+require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
     var designate = require('../..')
     var skip = require('skip')
     var mvcc = require('mvcc')
@@ -42,6 +42,7 @@ require('./proof')(2, function (step, serialize, deepEqual, Strata, tmp) {
                 skip.forward(strata, comparator, valid, 'a', step())
             }))
         }, function (iterators) {
+            console.log(iterators)
             designate.forward(comparator, deleted, iterators, step())
         }, function (iterator) {
             step(function () {
@@ -56,11 +57,10 @@ require('./proof')(2, function (step, serialize, deepEqual, Strata, tmp) {
                     }
                 })()
             }, function () {
+                deepEqual(iterator.versions.sort(),  [ 0, 1, 2, 3, 4 ], 'versions')
                 iterator.unlock()
-            }, function () {
-                return records
             })
-        }, function (records) {
+        }, function () {
             deepEqual(records, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'records')
             deepEqual(versions, [ 0, 3, 2, 0, 3, 2, 0, 4, 2 ], 'versions')
         }, function () {

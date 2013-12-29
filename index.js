@@ -12,6 +12,8 @@ function Merge (comparator, deleted, forward) {
         if (compare) return compare
         return b.key.version - a.key.version
     }
+
+    this.versions = []
 }
 
 Merge.prototype._advance = cadence(function (step, iterations) {
@@ -20,6 +22,9 @@ Merge.prototype._advance = cadence(function (step, iterations) {
             iteration.iterator.next(step())
         }, function (record, key) {
             if (record && key) {
+                if (!~this.versions.indexOf(record.version)) {
+                    this.versions.push(record.version)
+                }
                 iteration.record = record
                 iteration.key = key
                 this._iterations.push(iteration)
