@@ -5,6 +5,13 @@ This is actually done by
 upgraded to Skip 0.0.2 and we test that we don't get in the way of visited
 version accumulation.
 
+### 100% Test Coverage
+
+We now test the following conditions.
+
+ * Versions not included in the value versions set are ignored.
+
 ### Issue by Issue
 
  * Upgrade Skip to 0.0.2. #12.
+ * Test that invalid versions are excluded. #11.
