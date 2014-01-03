@@ -24,12 +24,12 @@
     },
     "dependencies":
     {
-                        "cadence":            "0.0.26",
-                        "skip":               "0.0.3"
+                        "cadence":            "0.0.26"
     },
     "devDependencies":
     {
                         "proof":              "0.0.36",
+                        "skip":               "0.0.4",
                         "mvcc":               "0.0.1",
                         "b-tree":             "0.0.10"
     },
