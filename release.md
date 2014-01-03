@@ -8,4 +8,5 @@ dependency with Revise.
 
 ### Issue by Issue
 
+ * Replace MVCC with Revise. #18.
  * Upgrade Skip to 0.0.4. #17.

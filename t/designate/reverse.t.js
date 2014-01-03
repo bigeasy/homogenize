@@ -1,7 +1,7 @@
 require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
     var designate = require('../..')
     var skip = require('skip')
-    var mvcc = require('mvcc')
+    var revise = require('revise')
     var fs = require('fs')
     var valid = {}, visited = {}
     ; [ 0, 1, 2, 4 ].forEach(function (version) { valid[version] = true })
@@ -23,8 +23,8 @@ require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
                 serialize(__dirname + '/fixtures/' + name + '.json', tmp + '/' + name, step())
             }, function () {
                 var strata = new Strata({
-                    extractor: mvcc.extractor(extractor),
-                    comparator: mvcc.comparator(comparator),
+                    extractor: revise.extractor(extractor),
+                    comparator: revise.comparator(comparator),
                     leafSize: 3, branchSize: 3,
                     directory: tmp + '/' + name
                 })
