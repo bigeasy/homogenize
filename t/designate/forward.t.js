@@ -1,4 +1,4 @@
-require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
+require('./proof')(5, function (step, serialize, deepEqual, Strata, tmp) {
     var designate = require('../..')
     var skip = require('skip')
     var revise = require('revise')
@@ -36,7 +36,7 @@ require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
             })
         }))
     }, function (stratas) {
-        var records = [], versions = []
+        var records = [], versions = [], keys = [], sizes = []
         step(function () {
             stratas.forEach(step([], function (strata) {
                 skip.forward(strata, comparator, valid, visited, 'a', step())
@@ -47,10 +47,12 @@ require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
             step(function () {
                 step(function () {
                     iterator.next(step())
-                }, function (record) {
+                }, function (record, key, size) {
                     if (record) {
                         records.push(record.value)
                         versions.push(record.version)
+                        keys.push(key.value)
+                        sizes.push(size)
                     } else {
                         step(null)
                     }
@@ -62,6 +64,8 @@ require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
         }, function () {
             deepEqual(records, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'records')
             deepEqual(versions, [ 0, 1, 2, 0, 1, 2, 0, 4, 2 ], 'versions')
+            deepEqual(keys, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'keys')
+            deepEqual(sizes, [ 91, 76, 76, 76, 76, 76, 76, 76, 91 ], 'sizes')
         }, function () {
             step(function (strata) {
                 strata.close(step())

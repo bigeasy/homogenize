@@ -20,13 +20,14 @@ Merge.prototype._advance = cadence(function (step, iterations) {
     step(function (iteration) {
         step(function () {
             iteration.iterator.next(step())
-        }, function (record, key) {
+        }, function (record, key, size) {
             if (record && key) {
                 if (!~this.versions.indexOf(record.version)) {
                     this.versions.push(record.version)
                 }
                 iteration.record = record
                 iteration.key = key
+                iteration.size = size
                 this._iterations.push(iteration)
             }
         })
@@ -55,13 +56,13 @@ Merge.prototype.next = cadence(function (step) {
         consumed.push(this._iterations.shift())
     }
 
-    var winner = [ consumed[0].record, consumed[0].key ]
+    var winner = [ consumed[0].record, consumed[0].key, consumed[0].size ]
 
     step(function () {
         this._advance(consumed, step())
     }, function () {
         if (this._deleted(winner[0])) this.next(step())
-        else step(null, winner[0], winner[1])
+        else step.apply(null, [ null ].concat(winner))
     })
 })
 
