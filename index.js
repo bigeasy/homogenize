@@ -21,7 +21,7 @@ Merge.prototype._advance = cadence(function (step, iterations) {
         step(function () {
             iteration.iterator.next(step())
         }, function (record, key, size) {
-            if (record && key) {
+            if (record) {
                 if (!~this.versions.indexOf(record.version)) {
                     this.versions.push(record.version)
                 }
