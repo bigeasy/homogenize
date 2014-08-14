@@ -59,7 +59,7 @@ require('./proof')(5, function (step, serialize, deepEqual, Strata, tmp) {
                 })()
             }, function () {
                 deepEqual(Object.keys(visited).sort(),  [ 0, 1, 2, 3, 4 ], 'versions')
-                iterator.unlock()
+                iterator.unlock(step())
             })
         }, function () {
             deepEqual(records, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'records')

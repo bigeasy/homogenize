@@ -28,9 +28,9 @@
     "devDependencies":
     {
                         "proof":              "0.0.44",
-                        "skip":               "0.0.6",
+                        "skip":               "0.0.7",
                         "revise":             "0.0.2",
-                        "b-tree":             "0.0.17"
+                        "b-tree":             "0.0.19"
     },
     "scripts":
     {

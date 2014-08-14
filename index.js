@@ -34,9 +34,11 @@ Merge.prototype._advance = cadence(function (step, iterations) {
     })(iterations)
 })
 
-Merge.prototype.unlock = function () {
-    this._iterators.forEach(function (iterator) { iterator.unlock() })
-}
+Merge.prototype.unlock = cadence(function (step) {
+    this._iterators.forEach(step([], function (iterator) {
+        iterator.unlock(step())
+    }))
+})
 
 Merge.prototype._candidate = function (winner) {
     return this._iterations.length &&
