@@ -46,7 +46,7 @@ Merge.prototype._candidate = function (winner) {
 }
 
 Merge.prototype.next = cadence(function (step) {
-    if (!this._iterations.length) return step(null)
+    if (!this._iterations.length) return []
 
     var consumed = []
 
