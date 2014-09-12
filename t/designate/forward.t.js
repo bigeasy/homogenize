@@ -54,7 +54,7 @@ require('./proof')(5, function (step, serialize, deepEqual, Strata, tmp) {
                         keys.push(key.value)
                         sizes.push(size)
                     } else {
-                        step(null)
+                        return [ step ]
                     }
                 })()
             }, function () {

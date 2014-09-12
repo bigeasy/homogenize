@@ -52,7 +52,7 @@ require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
                         records.push(record.value)
                         versions.push(record.version)
                     } else {
-                        step(null)
+                        return [ step ]
                     }
                 })()
             }, function () {
