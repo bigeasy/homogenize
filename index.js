@@ -64,7 +64,7 @@ Merge.prototype.next = cadence(function (step) {
         this._advance(consumed, step())
     }, function () {
         if (this._deleted(winner[0])) this.next(step())
-        else step.apply(null, [ null ].concat(winner))
+        else return [ step ].concat(winner)
     })
 })
 
