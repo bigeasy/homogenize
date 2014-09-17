@@ -1,6 +1,6 @@
 {
     "name":             "designate",
-    "version":          "0.0.6",
+    "version":          "0.0.7",
     "author":           "Alan Gutierrez <alan@prettyrobots.com>",
     "description":      "Iterate a collection of MVCC b-tree cursors choosing the most recent version of a record from each tree.",
     "keywords":
