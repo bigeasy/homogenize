@@ -27,10 +27,10 @@
     },
     "devDependencies":
     {
-                        "proof":              "0.0.48",
+                        "proof":              "0.0.50",
                         "skip":               "0.0.9",
                         "revise":             "0.0.2",
-                        "b-tree":             "0.0.26"
+                        "b-tree":             "0.0.28"
     },
     "scripts":
     {

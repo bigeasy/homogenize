@@ -1,4 +1,4 @@
-require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
+require('./proof')(3, function (step, assert) {
     var designate = require('../..')
     var skip = require('skip')
     var revise = require('revise')
@@ -56,12 +56,12 @@ require('./proof')(3, function (step, serialize, deepEqual, Strata, tmp) {
                     }
                 })()
             }, function () {
-                deepEqual(Object.keys(visited).sort(),  [ 0, 1, 2, 3, 4 ], 'versions')
+                assert(Object.keys(visited).sort(),  [ 0, 1, 2, 3, 4 ], 'versions')
                 iterator.unlock(step())
             })
         }, function () {
-            deepEqual(records, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ].reverse(), 'records')
-            deepEqual(versions, [ 0, 1, 2, 0, 1, 2, 0, 4, 2 ].reverse(), 'versions')
+            assert(records, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ].reverse(), 'records')
+            assert(versions, [ 0, 1, 2, 0, 1, 2, 0, 4, 2 ].reverse(), 'versions')
         }, function () {
             step(function (strata) {
                 strata.close(step())

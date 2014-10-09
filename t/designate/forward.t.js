@@ -1,4 +1,4 @@
-require('./proof')(5, function (step, serialize, deepEqual, Strata, tmp) {
+require('./proof')(5, function (step, assert) {
     var designate = require('../..')
     var skip = require('skip')
     var revise = require('revise')
@@ -58,14 +58,14 @@ require('./proof')(5, function (step, serialize, deepEqual, Strata, tmp) {
                     }
                 })()
             }, function () {
-                deepEqual(Object.keys(visited).sort(),  [ 0, 1, 2, 3, 4 ], 'versions')
+                assert(Object.keys(visited).sort(),  [ 0, 1, 2, 3, 4 ], 'versions')
                 iterator.unlock(step())
             })
         }, function () {
-            deepEqual(records, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'records')
-            deepEqual(versions, [ 0, 1, 2, 0, 1, 2, 0, 4, 2 ], 'versions')
-            deepEqual(keys, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'keys')
-            deepEqual(sizes, [ 91, 76, 76, 76, 76, 76, 76, 76, 91 ], 'sizes')
+            assert(records, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'records')
+            assert(versions, [ 0, 1, 2, 0, 1, 2, 0, 4, 2 ], 'versions')
+            assert(keys, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'keys')
+            assert(sizes, [ 91, 76, 76, 76, 76, 76, 76, 76, 91 ], 'sizes')
         }, function () {
             step(function (strata) {
                 strata.close(step())
