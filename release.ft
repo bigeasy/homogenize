@@ -1,5 +1,6 @@
 ### Issue by Issue
 
+ * Remove `require.t.js`. #55.
  * Rename main module to `designate.js`. #54.
  * Upgrade Skip to 0.0.10. #53.
  * Upgrade Proof to 0.0.50. #52.
