@@ -21,6 +21,7 @@
                         "type": "git",
                         "url": "http://github.com/bigeasy/designate.git"
     },
+    "main":             "designate",
     "dependencies":
     {
                         "cadence":            "0.0.43"
