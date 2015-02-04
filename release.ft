@@ -1,5 +1,6 @@
 ### Issue by Issue
 
+ * Upgrade Revise to 0.0.4. #58.
  * Rename `step` to `async`. #57.
  * Use a `prove` named function in tests. #56.
  * Remove `require.t.js`. #55.
