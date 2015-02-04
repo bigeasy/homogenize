@@ -1,5 +1,6 @@
 ### Issue by Issue
 
+ * Update license dates. #61.
  * Upgrade Strata to 0.0.30. #59.
  * Upgrade Revise to 0.0.4. #58.
  * Rename `step` to `async`. #57.
