@@ -16,10 +16,10 @@ function Merge (comparator, deleted, iterators, forward) {
     this.versions = []
 }
 
-Merge.prototype._advance = cadence(function (step, iterations) {
-    step(function (iteration) {
-        step(function () {
-            iteration.iterator.next(step())
+Merge.prototype._advance = cadence(function (async, iterations) {
+    async(function (iteration) {
+        async(function () {
+            iteration.iterator.next(async())
         }, function (record, key, size) {
             if (record) {
                 if (!~this.versions.indexOf(record.version)) {
@@ -34,9 +34,9 @@ Merge.prototype._advance = cadence(function (step, iterations) {
     })(iterations)
 })
 
-Merge.prototype.unlock = cadence(function (step) {
-    this._iterators.forEach(step([], function (iterator) {
-        iterator.unlock(step())
+Merge.prototype.unlock = cadence(function (async) {
+    this._iterators.forEach(async([], function (iterator) {
+        iterator.unlock(async())
     }))
 })
 
@@ -45,7 +45,7 @@ Merge.prototype._candidate = function (winner) {
            this._comparator(winner.key.value, this._iterations[0].key.value) == 0
 }
 
-Merge.prototype.next = cadence(function (step) {
+Merge.prototype.next = cadence(function (async) {
     if (!this._iterations.length) return []
 
     var consumed = []
@@ -60,19 +60,19 @@ Merge.prototype.next = cadence(function (step) {
 
     var winner = [ consumed[0].record, consumed[0].key, consumed[0].size ]
 
-    step(function () {
-        this._advance(consumed, step())
+    async(function () {
+        this._advance(consumed, async())
     }, function () {
-        if (this._deleted(winner[0])) this.next(step())
-        else return [ step ].concat(winner)
+        if (this._deleted(winner[0])) this.next(async())
+        else return [ async ].concat(winner)
     })
 })
 
-var prime = cadence(function (step, merge, iterators) {
-    step(function () {
+var prime = cadence(function (async, merge, iterators) {
+    async(function () {
         merge._advance(iterators.map(function (iterator) {
             return { iterator: iterator }
-        }), step())
+        }), async())
     }, function () {
         return merge
     })
