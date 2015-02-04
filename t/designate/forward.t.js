@@ -18,7 +18,7 @@ function prove (async, assert) {
     }
     var names = 'one two three'.split(/\s+/)
     async(function () {
-        names.forEach(async([], function (name) {
+        async.map(function (name) {
             async(function () {
                 fs.mkdir(tmp + '/' + name, async())
             }, function () {
@@ -36,18 +36,18 @@ function prove (async, assert) {
                     return strata
                 })
             })
-        }))
+        })(names)
     }, function (stratas) {
         var records = [], versions = [], keys = [], sizes = []
         async(function () {
-            stratas.forEach(async([], function (strata) {
+            async.map(function (strata) {
                 skip.forward(strata, comparator, valid, visited, 'a', async())
-            }))
+            })(stratas)
         }, function (iterators) {
             designate.forward(comparator, deleted, iterators, async())
         }, function (iterator) {
             async(function () {
-                async(function () {
+                var loop = async(function () {
                     iterator.next(async())
                 }, function (record, key, size) {
                     if (record) {
@@ -56,7 +56,7 @@ function prove (async, assert) {
                         keys.push(key.value)
                         sizes.push(size)
                     } else {
-                        return [ async ]
+                        return [ loop ]
                     }
                 })()
             }, function () {
@@ -69,7 +69,7 @@ function prove (async, assert) {
             assert(keys, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ], 'keys')
             assert(sizes, [ 91, 76, 76, 76, 76, 76, 76, 76, 91 ], 'sizes')
         }, function () {
-            async(function (strata) {
+            async.forEach(function (strata) {
                 strata.close(async())
             })(stratas)
         })
