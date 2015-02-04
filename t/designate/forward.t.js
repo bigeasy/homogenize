@@ -1,4 +1,6 @@
-require('./proof')(5, function (step, assert) {
+require('./proof')(5, prove)
+
+function prove (step, assert) {
     var designate = require('../..')
     var skip = require('skip')
     var revise = require('revise')
@@ -72,4 +74,4 @@ require('./proof')(5, function (step, assert) {
             })(stratas)
         })
     })
-})
+}
