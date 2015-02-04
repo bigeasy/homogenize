@@ -1,4 +1,4 @@
-var cadence = require('cadence')
+var cadence = require('cadence/redux')
 
 function Merge (comparator, deleted, iterators, forward) {
     var negate = forward ? 1 : -1
@@ -17,7 +17,7 @@ function Merge (comparator, deleted, iterators, forward) {
 }
 
 Merge.prototype._advance = cadence(function (async, iterations) {
-    async(function (iteration) {
+    async.forEach(function (iteration) {
         async(function () {
             iteration.iterator.next(async())
         }, function (record, key, size) {
@@ -35,9 +35,9 @@ Merge.prototype._advance = cadence(function (async, iterations) {
 })
 
 Merge.prototype.unlock = cadence(function (async) {
-    this._iterators.forEach(async([], function (iterator) {
+    async.forEach(function (iterator) {
         iterator.unlock(async())
-    }))
+    })(this._iterators)
 })
 
 Merge.prototype._candidate = function (winner) {
@@ -64,7 +64,7 @@ Merge.prototype.next = cadence(function (async) {
         this._advance(consumed, async())
     }, function () {
         if (this._deleted(winner[0])) this.next(async())
-        else return [ async ].concat(winner)
+        else return winner
     })
 })
 
