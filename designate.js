@@ -1,5 +1,7 @@
 var cadence = require('cadence/redux')
 
+require('cadence/loops')
+
 function Merge (comparator, deleted, iterators, forward) {
     var negate = forward ? 1 : -1
 
