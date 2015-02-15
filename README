@@ -1,16 +1,15 @@
-Designate
+Homogenize
 
-Iterate a collection of MVCC b-tree cursors choosing the most recent version of
-a record from each tree.
+Merge one or more b-tree cursors into a single iterator.
 
-    Documentation:  http://bigeasy.github.io/designate
-    Source:         http://github.com/bigeasy/designate
-    Issues:         http://github.com/bigeasy/designate/issues
+    Documentation:  http://bigeasy.github.io/homogenize
+    Source:         http://github.com/bigeasy/homogenize
+    Issues:         http://github.com/bigeasy/homogenize/issues
 
-    Install:        `npm install designate`
+    Install:        `npm install homogenize`
 
     License:        MIT
 
 To learn everything you want to know about Designate start here:
 
-    http://bigeasy.github.io/designate
+    http://bigeasy.github.io/homogenize

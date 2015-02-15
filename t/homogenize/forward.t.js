@@ -1,7 +1,7 @@
 require('./proof')(1, prove)
 
 function prove (async, assert) {
-    var designate = require('../..')
+    var homogenize = require('../..')
     var riffle = require('riffle')
     var revise = require('revise')
     var fs = require('fs')
@@ -44,7 +44,7 @@ function prove (async, assert) {
                 riffle.forward(strata, { value: 'a' }, async())
             })(stratas)
         }, function (iterators) {
-            designate.forward(revise.comparator(comparator), iterators, async())
+            homogenize.forward(revise.comparator(comparator), iterators, async())
         }, function (iterator) {
             var records = [], versions = []
             async(function () {

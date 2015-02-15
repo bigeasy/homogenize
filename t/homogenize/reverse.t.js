@@ -1,7 +1,7 @@
 require('./proof')(1, prove)
 
 function prove (async, assert) {
-    var designate = require('../..')
+    var homogenize = require('../..')
     var riffle = require('riffle')
     var revise = require('revise')
     var fs = require('fs')
@@ -44,7 +44,7 @@ function prove (async, assert) {
                 riffle.reverse(strata, async())
             })(stratas)
         }, function (iterators) {
-            designate.reverse(revise.comparator(comparator), iterators, async())
+            homogenize.reverse(revise.comparator(comparator), iterators, async())
         }, function (iterator) {
             async(function () {
                 var loop = async(function () {
