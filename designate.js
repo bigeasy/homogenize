@@ -2,88 +2,56 @@ var cadence = require('cadence/redux')
 
 require('cadence/loops')
 
-function Merge (comparator, deleted, iterators, forward) {
-    var negate = forward ? 1 : -1
-
+function Homogenize (comparator, iterators, negate) {
     this._iterations = []
+    this._consumed = iterators.slice()
     this._iterators = iterators
-    this._comparator = comparator
-    this._deleted = deleted
-    this._versioned = function (a, b) {
-        var compare = comparator(a.key.value, b.key.value) * negate
-        if (compare) return compare
-        return b.key.version - a.key.version
+    this._order = function (a, b) {
+        return comparator(a.items[a.index].key, b.items[b.index].key) * negate
     }
-
-    this.versions = []
 }
 
-Merge.prototype._advance = cadence(function (async, iterations) {
-    async.forEach(function (iteration) {
-        async(function () {
-            iteration.iterator.next(async())
-        }, function (record, key, size) {
-            if (record) {
-                if (!~this.versions.indexOf(record.version)) {
-                    this.versions.push(record.version)
-                }
-                iteration.record = record
-                iteration.key = key
-                iteration.size = size
-                this._iterations.push(iteration)
-            }
-        })
-    })(iterations)
-})
-
-Merge.prototype.unlock = cadence(function (async) {
+Homogenize.prototype.unlock = cadence(function (async) {
     async.forEach(function (iterator) {
         iterator.unlock(async())
     })(this._iterators)
 })
 
-Merge.prototype._candidate = function (winner) {
-    return this._iterations.length &&
-           this._comparator(winner.key.value, this._iterations[0].key.value) == 0
-}
-
-Merge.prototype.next = cadence(function (async) {
-    if (!this._iterations.length) return []
-
-    var consumed = []
-
-    this._iterations.sort(this._versioned)
-
-    consumed.push(this._iterations.shift())
-
-    while (this._candidate(consumed[0])) {
-        consumed.push(this._iterations.shift())
-    }
-
-    var winner = [ consumed[0].record, consumed[0].key, consumed[0].size ]
-
+Homogenize.prototype.next = cadence(function (async) {
     async(function () {
-        this._advance(consumed, async())
+        async.forEach(function (iterator) {
+            async(function () {
+                iterator.next(async())
+            }, function (items) {
+                if (items != null) {
+                    this._iterations.push({ iterator: iterator, items: items, index: 0 })
+                }
+            })
+        })(this._consumed)
     }, function () {
-        if (this._deleted(winner[0])) this.next(async())
-        else return winner
+        var items = [], iterations = this._iterations
+        if (iterations.length === 0) {
+            return [ null ]
+        }
+        for (;;) {
+            if (iterations.length !== 1) {
+                iterations.sort(this._order)
+            }
+            var iteration = iterations[0]
+            items.push(iteration.items[iteration.index++])
+            if (iteration.items.length === iteration.index) {
+                this._consumed.push(iterations.shift().iterator)
+                break
+            }
+        }
+        return [ items ]
     })
 })
 
-var prime = cadence(function (async, merge, iterators) {
-    async(function () {
-        merge._advance(iterators.map(function (iterator) {
-            return { iterator: iterator }
-        }), async())
-    }, function () {
-        return merge
-    })
-})
-
-exports.forward = function (comparator, deleted, iterators, callback) {
-    prime(new Merge(comparator, deleted, iterators, true), iterators, callback)
+exports.forward = function (comparator, iterators, callback) {
+    callback(null, new Homogenize(comparator, iterators, 1))
 }
 
-exports.reverse = function (comparator, deleted, iterators, callback) {
-    prime(new Merge(comparator, deleted, iterators, false), iterators, callback)
+exports.reverse = function (comparator, iterators, callback) {
+    callback(null, new Homogenize(comparator, iterators, -1))
 }

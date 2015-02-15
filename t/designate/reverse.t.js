@@ -1,8 +1,8 @@
-require('./proof')(3, prove)
+require('./proof')(1, prove)
 
 function prove (async, assert) {
     var designate = require('../..')
-    var skip = require('skip')
+    var riffle = require('riffle')
     var revise = require('revise')
     var fs = require('fs')
     var valid = {}, visited = {}
@@ -24,7 +24,7 @@ function prove (async, assert) {
             }, function () {
                 serialize(__dirname + '/fixtures/' + name + '.json', tmp + '/' + name, async())
             }, function () {
-                var strata = new Strata({
+                var strata = createStrata({
                     extractor: revise.extractor(extractor),
                     comparator: revise.comparator(comparator),
                     leafSize: 3, branchSize: 3,
@@ -41,29 +41,44 @@ function prove (async, assert) {
         var records = [], versions = []
         async(function () {
             async.map(function (strata) {
-                skip.reverse(strata, comparator, valid, visited, async())
+                riffle.reverse(strata, async())
             })(stratas)
         }, function (iterators) {
-            designate.reverse(comparator, deleted, iterators, async())
+            designate.reverse(revise.comparator(comparator), iterators, async())
         }, function (iterator) {
             async(function () {
                 var loop = async(function () {
                     iterator.next(async())
-                }, function (record) {
-                    if (record) {
-                        records.push(record.value)
-                        versions.push(record.version)
-                    } else {
+                }, function (items) {
+                    if (items == null) {
                         return [ loop ]
                     }
+                    items.forEach(function (item) {
+                        records.push(item.record)
+                    })
                 })()
             }, function () {
-                assert(Object.keys(visited).sort(),  [ 0, 1, 2, 3, 4 ], 'versions')
+                assert(records, [ { value: 'i', version: 2, deleted: true },
+                                  { value: 'h', version: 4 },
+                                  { value: 'h', version: 1 },
+                                  { value: 'h', version: 0 },
+                                  { value: 'g', version: 0 },
+                                  { value: 'g', version: 0 },
+                                  { value: 'f', version: 2 },
+                                  { value: 'f', version: 0 },
+                                  { value: 'e', version: 3 },
+                                  { value: 'e', version: 1 },
+                                  { value: 'e', version: 0 },
+                                  { value: 'd', version: 0 },
+                                  { value: 'd', version: 0 },
+                                  { value: 'c', version: 2 },
+                                  { value: 'c', version: 0 },
+                                  { value: 'b', version: 3 },
+                                  { value: 'b', version: 1 },
+                                  { value: 'b', version: 0 },
+                                  { value: 'a', version: 0, deleted: true } ], 'records')
                 iterator.unlock(async())
             })
-        }, function () {
-            assert(records, [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ].reverse(), 'records')
-            assert(versions, [ 0, 1, 2, 0, 1, 2, 0, 4, 2 ].reverse(), 'versions')
         }, function () {
             async.forEach(function (strata) {
                 strata.close(async())
