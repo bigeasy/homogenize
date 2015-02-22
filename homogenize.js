@@ -7,7 +7,7 @@ function Homogenize (comparator, iterators, negate) {
     this._consumed = iterators.slice()
     this._iterators = iterators
     this._order = function (a, b) {
-        return comparator(a.items[a.index].key, b.items[b.index].key) * negate
+        return comparator(a.item.key, b.item.key) * negate
     }
 }
 
@@ -17,34 +17,44 @@ Homogenize.prototype.unlock = cadence(function (async) {
     })(this._iterators)
 })
 
+Homogenize.prototype.get = function () {
+    var iterations = this._iterations
+    if (iterations[0].item == null) {
+        this._consumed.push(iterations.shift().iterator)
+        return null
+    }
+    if (iterations.length !== 1) {
+        iterations.sort(this._order)
+    }
+    var iteration = iterations[0]
+    var item = iteration.item
+    iteration.item = iteration.iterator.get()
+    return item
+}
+
 Homogenize.prototype.next = cadence(function (async) {
     async(function () {
-        async.forEach(function (iterator) {
+        var loop = async(function (iterator) {
+            if (this._consumed.length === 0) return [ loop ]
+            var iterator = this._consumed.pop()
             async(function () {
                 iterator.next(async())
-            }, function (items) {
-                if (items != null) {
-                    this._iterations.push({ iterator: iterator, items: items, index: 0 })
+            }, function (more) {
+                if (more) {
+                    var item = iterator.get()
+                    if (item == null) {
+                        this._consumed.push(iterator)
+                    } else {
+                        this._iterations.push({
+                            iterator: iterator,
+                            item: item
+                        })
+                    }
                 }
             })
-        })(this._consumed)
+        })()
     }, function () {
-        var items = [], iterations = this._iterations
-        if (iterations.length === 0) {
-            return [ null ]
-        }
-        for (;;) {
-            if (iterations.length !== 1) {
-                iterations.sort(this._order)
-            }
-            var iteration = iterations[0]
-            items.push(iteration.items[iteration.index++])
-            if (iteration.items.length === iteration.index) {
-                this._consumed.push(iterations.shift().iterator)
-                break
-            }
-        }
-        return [ items ]
+        return this._iterations.length !== 0
     })
 })
 

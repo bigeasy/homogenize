@@ -49,13 +49,15 @@ function prove (async, assert) {
             async(function () {
                 var loop = async(function () {
                     iterator.next(async())
-                }, function (items) {
-                    if (items == null) {
+                }, function (more) {
+                    if (more) {
+                        var item
+                        while (item = iterator.get()) {
+                            records.push(item.record)
+                        }
+                    } else {
                         return [ loop ]
                     }
-                    items.forEach(function (item) {
-                        records.push(item.record)
-                    })
                 })()
             }, function () {
                 assert(records, [ { value: 'i', version: 2, deleted: true },

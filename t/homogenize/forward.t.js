@@ -46,17 +46,19 @@ function prove (async, assert) {
         }, function (iterators) {
             homogenize.forward(revise.comparator(comparator), iterators, async())
         }, function (iterator) {
-            var records = [], versions = []
+            var records = []
             async(function () {
                 var loop = async(function () {
                     iterator.next(async())
-                }, function (items) {
-                    if (items == null) {
+                }, function (more) {
+                    if (more) {
+                        var item
+                        while (item = iterator.get()) {
+                            records.push(item.record)
+                        }
+                    } else {
                         return [ loop ]
                     }
-                    items.forEach(function (item) {
-                        records.push(item.record)
-                    })
                 })()
             }, function () {
                 assert(records, [ { value: 'a', version: 0, deleted: true },
