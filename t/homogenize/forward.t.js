@@ -44,8 +44,7 @@ function prove (async, assert) {
                 riffle.forward(strata, { value: 'a' }, async())
             })(stratas)
         }, function (iterators) {
-            homogenize.forward(revise.comparator(comparator), iterators, async())
-        }, function (iterator) {
+            var iterator = homogenize.forward(revise.comparator(comparator), iterators)
             var records = []
             async(function () {
                 var loop = async(function () {

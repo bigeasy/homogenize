@@ -44,8 +44,7 @@ function prove (async, assert) {
                 riffle.reverse(strata, async())
             })(stratas)
         }, function (iterators) {
-            homogenize.reverse(revise.comparator(comparator), iterators, async())
-        }, function (iterator) {
+            var iterator = homogenize.reverse(revise.comparator(comparator), iterators)
             async(function () {
                 var loop = async(function () {
                     iterator.next(async())

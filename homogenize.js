@@ -59,9 +59,9 @@ Homogenize.prototype.next = cadence(function (async) {
 })
 
 exports.forward = function (comparator, iterators, callback) {
-    callback(null, new Homogenize(comparator, iterators, 1))
+    return new Homogenize(comparator, iterators, 1)
 }
 
 exports.reverse = function (comparator, iterators, callback) {
-    callback(null, new Homogenize(comparator, iterators, -1))
+    return new Homogenize(comparator, iterators, -1)
 }

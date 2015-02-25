@@ -1,5 +1,6 @@
 ### Issue by Issue
 
+ * Make construction asynchronous. #72.
  * Implement new `get` interface. #71.
  * Convert to a simple merge of iterators. #68.
  * Upgrade Skip to 0.0.12. #64.
