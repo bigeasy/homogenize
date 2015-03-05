@@ -3,7 +3,6 @@ require('./proof')(1, prove)
 function prove (async, assert) {
     var homogenize = require('../..')
     var riffle = require('riffle')
-    var revise = require('revise')
     var fs = require('fs')
     var valid = {}, visited = {}
     ; [ 0, 1, 2, 4 ].forEach(function (version) { valid[version] = true })
@@ -11,10 +10,14 @@ function prove (async, assert) {
         return false
     }
     function extractor (record) {
-        return record.value
+        return record
     }
     function comparator (a, b) {
-        return a < b ? -1 : a > b ? 1 : 0
+        var compare = a.value < b.value ? -1 : a.value > b.value ? 1 : 0
+        if (compare === 0) {
+            return a.version - b.version
+        }
+        return compare
     }
     var names = 'one two three'.split(/\s+/)
     async(function () {
@@ -25,8 +28,8 @@ function prove (async, assert) {
                 serialize(__dirname + '/fixtures/' + name + '.json', tmp + '/' + name, async())
             }, function () {
                 var strata = createStrata({
-                    extractor: revise.extractor(extractor),
-                    comparator: revise.comparator(comparator),
+                    extractor: extractor,
+                    comparator: comparator,
                     leafSize: 3, branchSize: 3,
                     directory: tmp + '/' + name
                 })
@@ -44,7 +47,7 @@ function prove (async, assert) {
                 riffle.reverse(strata, async())
             })(stratas)
         }, function (iterators) {
-            var iterator = homogenize.reverse(revise.comparator(comparator), iterators)
+            var iterator = homogenize.reverse(comparator, iterators)
             async(function () {
                 var loop = async(function () {
                     iterator.next(async())
