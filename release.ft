@@ -1,5 +1,6 @@
 ### Issue by Issue
 
+ * Upgrade Riffle to 0.0.17. #77.
  * Upgrade Cadence to 0.0.52. #76.
  * Upgrade Strata to 0.0.39. #75.
  * Make construction asynchronous. #72.
