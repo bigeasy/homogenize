@@ -11,11 +11,7 @@
     "contributors":     [],
     "homepage":         "https://github.com/bigeasy/homogenize",
     "bugs":             "https://github.com/bigeasy/homogenize/issues",
-    "licenses":
-    [{
-                        "type": "MIT",
-                        "url": "http://github.com/bigeasy/homogenize/raw/master/LICENSE"
-    }],
+    "license":          "MIT",
     "repository":
     {
                         "type": "git",
