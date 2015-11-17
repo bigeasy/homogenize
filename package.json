@@ -1,6 +1,6 @@
 {
     "name":             "homogenize",
-    "version":          "0.0.13",
+    "version":          "0.0.14",
     "author":           "Alan Gutierrez <alan@prettyrobots.com>",
     "description":      "Iterate a collection of MVCC b-tree cursors choosing the most recent version of a record from each tree.",
     "keywords":
