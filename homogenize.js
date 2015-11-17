@@ -1,6 +1,4 @@
-var cadence = require('cadence/redux')
-
-require('cadence/loops')
+var cadence = require('cadence')
 
 function Homogenize (comparator, iterators, negate) {
     this._iterations = []
@@ -35,7 +33,7 @@ Homogenize.prototype.get = function () {
 Homogenize.prototype.next = cadence(function (async) {
     async(function () {
         var loop = async(function (iterator) {
-            if (this._consumed.length === 0) return [ loop ]
+            if (this._consumed.length === 0) return [ loop.break ]
             var iterator = this._consumed.pop()
             async(function () {
                 iterator.next(async())

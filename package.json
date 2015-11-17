@@ -20,14 +20,14 @@
     "main":             "homogenize",
     "dependencies":
     {
-                        "cadence":            "0.0.52"
+                        "cadence":            "0.4.1"
     },
     "devDependencies":
     {
                         "proof":              "0.0.51",
                         "rimraf":             "~2.2",
                         "riffle":             "0.0.17",
-                        "b-tree":             "0.0.39"
+                        "b-tree":             "0.0.40"
     },
     "scripts":
     {

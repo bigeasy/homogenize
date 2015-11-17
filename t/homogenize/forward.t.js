@@ -59,7 +59,7 @@ function prove (async, assert) {
                             records.push(item.record)
                         }
                     } else {
-                        return [ loop ]
+                        return [ loop.break ]
                     }
                 })()
             }, function () {
