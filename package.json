@@ -24,10 +24,10 @@
     },
     "devDependencies":
     {
+                        "b-tree":             "1.x",
                         "proof":              "1.x",
-                        "rimraf":             "2.4.3",
                         "riffle":             "1.x",
-                        "b-tree":             "1.x"
+                        "rimraf":             "2.4.3"
     },
     "scripts":
     {
