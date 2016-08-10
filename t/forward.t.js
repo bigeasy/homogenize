@@ -1,7 +1,7 @@
 require('./proof')(1, prove)
 
 function prove (async, assert) {
-    var homogenize = require('../..')
+    var homogenize = require('..')
     var riffle = require('riffle')
     var fs = require('fs')
     var valid = {}, visited = {}
@@ -44,10 +44,11 @@ function prove (async, assert) {
         var records = [], versions = []
         async(function () {
             async.map(function (strata) {
-                riffle.reverse(strata, async())
+                riffle.forward(strata, { value: 'a' }, async())
             })(stratas)
         }, function (iterators) {
-            var iterator = homogenize.reverse(comparator, iterators)
+            var iterator = homogenize.forward(comparator, iterators)
+            var records = []
             async(function () {
                 var loop = async(function () {
                     iterator.next(async())
@@ -62,25 +63,25 @@ function prove (async, assert) {
                     }
                 })()
             }, function () {
-                assert(records, [ { value: 'i', version: 2, deleted: true },
-                                  { value: 'h', version: 4 },
-                                  { value: 'h', version: 1 },
-                                  { value: 'h', version: 0 },
-                                  { value: 'g', version: 0 },
-                                  { value: 'g', version: 0 },
-                                  { value: 'f', version: 2 },
-                                  { value: 'f', version: 0 },
-                                  { value: 'e', version: 3 },
-                                  { value: 'e', version: 1 },
-                                  { value: 'e', version: 0 },
-                                  { value: 'd', version: 0 },
-                                  { value: 'd', version: 0 },
-                                  { value: 'c', version: 2 },
-                                  { value: 'c', version: 0 },
-                                  { value: 'b', version: 3 },
-                                  { value: 'b', version: 1 },
-                                  { value: 'b', version: 0 },
-                                  { value: 'a', version: 0, deleted: true } ], 'records')
+                assert(records, [ { value: 'a', version: 0, deleted: true },
+                  { value: 'b', version: 0 },
+                  { value: 'b', version: 1 },
+                  { value: 'b', version: 3 },
+                  { value: 'c', version: 0 },
+                  { value: 'c', version: 2 },
+                  { value: 'd', version: 0 },
+                  { value: 'd', version: 0 },
+                  { value: 'e', version: 0 },
+                  { value: 'e', version: 1 },
+                  { value: 'e', version: 3 },
+                  { value: 'f', version: 0 },
+                  { value: 'f', version: 2 },
+                  { value: 'g', version: 0 },
+                  { value: 'g', version: 0 },
+                  { value: 'h', version: 0 },
+                  { value: 'h', version: 1 },
+                  { value: 'h', version: 4 },
+                  { value: 'i', version: 2, deleted: true } ], 'forward')
                 iterator.unlock(async())
             })
         }, function () {
