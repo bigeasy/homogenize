@@ -1,7 +1,6 @@
 {
     "name":                 "homogenize",
     "version":              "1.0.0",
-    "author":               "Alan Gutierrez <alan@prettyrobots.com>",
     "description":
 
       "Iterate a collection of MVCC b-tree cursors choosing the most recent version of a record from each tree.",
@@ -11,6 +10,7 @@
                             "btree", "leveldb", "levelup", "binary", "mvcc",
                             "database", "json", "b-tree", "concurrent", "persistence"
     ],
+    "author":               "Alan Gutierrez <alan@prettyrobots.com>",
     "homepage":             "https://github.com/bigeasy/homogenize",
     "bugs":                 "https://github.com/bigeasy/homogenize/issues",
     "license":              "MIT",
@@ -19,7 +19,6 @@
                             "type": "git",
                             "url": "http://github.com/bigeasy/homogenize.git"
     },
-    "main":                 "homogenize",
     "dependencies":
     {
                             "cadence":                      "1.0.x"
@@ -31,6 +30,7 @@
                             "riffle":                       "1.0.x",
                             "rimraf":                       "2.5.1"
     },
+    "main":                 "homogenize",
     "scripts":
     {
                             "test": "proof platform win32 && proof test */*/*.t.js || t/test"
