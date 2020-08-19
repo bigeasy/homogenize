@@ -21,18 +21,14 @@
     },
     "dependencies":
     {
-                            "cadence":                      "1.0.x"
     },
     "devDependencies":
     {
-                            "b-tree":                       "1.0.x",
-                            "proof":                        "3.0.x",
-                            "riffle":                       "1.0.x",
-                            "rimraf":                       "2.6.2"
+                            "advance":                      "3.0.0-alpha.0",
+                            "proof":                        "^9.0.2"
     },
-    "main":                 "homogenize",
     "scripts":
     {
-                            "test": "proof platform win32 && proof test */*.t.js || t/test"
+                            "test": "proof test/*.t.js"
     }
 }
