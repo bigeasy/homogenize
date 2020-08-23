@@ -4,7 +4,7 @@ module.exports = function (comparator, collections, reversed) {
         return { outer: collection[Symbol.asyncIterator](), inner: [], index: 0, done: false }
     })
     function compare (left, right) {
-        return comparator(left.inner[left.index], right.inner[right.index]) * negate
+        return comparator(left.inner[left.index].key, right.inner[right.index].key) * negate
     }
     return {
         [Symbol.asyncIterator]: function () {

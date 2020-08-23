@@ -7,9 +7,13 @@ require('proof')(2, async okay => {
         [ 3, 8 ]
     ], [
         [ 4, 5, 6, 9, 11 ]
-    ]]
+    ]].map(array => {
+        return array.map(array => {
+            return array.map(value => { return { key: value } })
+        })
+    })
 
-    const merged = new Array(11).fill(0).map((_, index) => index + 1)
+    const merged = new Array(11).fill(0).map((_, index) => { return { key: index + 1 } })
 
     function comparator (left, right) {
         return +left - +right
