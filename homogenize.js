@@ -1,6 +1,9 @@
+const assert = require('assert')
+
 module.exports = function (comparator, collections, reversed) {
-    const negate = reversed ? -1 : 1
-    const iterators = collections.map(collection => {
+    const negate = reversed ? -1 : 1, resumable = []
+    let previous = null
+    const paginators = collections.map(collection => {
         return { outer: collection[Symbol.asyncIterator](), inner: [], index: 0, done: false }
     })
     function compare (left, right) {
@@ -11,14 +14,21 @@ module.exports = function (comparator, collections, reversed) {
             return this
         },
         next: async function () {
+            resumable.splice(0).forEach(iterator => {
+                iterator.outer.resume(previous)
+                paginators.unshift(iterator)
+            })
             let i = 0
-            while (i < iterators.length && iterators[i].inner.length == iterators[i].index) {
-                const paginator = iterators[i]
+            while (i < paginators.length && paginators[i].inner.length == paginators[i].index) {
+                const paginator = paginators[i]
                 for (;;) {
                     const outer = await paginator.outer.next()
                     if (outer.done) {
                         paginator.done = true
-                        iterators.splice(i, 1)
+                        paginators.splice(i, 1)
+                        if (paginator.outer.resumable) {
+                            resumable.push(paginator)
+                        }
                         break
                     }
                     if (outer.value.length != 0) {
@@ -29,14 +39,16 @@ module.exports = function (comparator, collections, reversed) {
                     }
                 }
             }
-            if (iterators.length == 0) {
+            if (paginators.length == 0) {
                 return { done: true }
             }
             const gathered = []
             do {
-                iterators.sort(compare)
-                gathered.push(iterators[0].inner[iterators[0].index++])
-            } while (iterators[0].inner.length != iterators[0].index)
+                paginators.sort(compare)
+                gathered.push(paginators[0].inner[paginators[0].index++])
+            } while (paginators[0].inner.length != paginators[0].index)
+            assert.notEqual(gathered.length, 0)
+            previous = gathered[gathered.length - 1]
             return { done: false, value: gathered }
         }
     }
