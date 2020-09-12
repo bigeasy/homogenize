@@ -1,7 +1,7 @@
 const assert = require('assert')
 
 module.exports = function (comparator, collections, reversed) {
-    const negate = reversed ? -1 : 1, resumable = []
+    const negate = reversed ? -1 : 1
     let previous = null
     const paginators = collections.map(collection => {
         return { outer: collection[Symbol.asyncIterator](), inner: [], index: 0, done: false }
@@ -14,10 +14,6 @@ module.exports = function (comparator, collections, reversed) {
             return this
         },
         next: async function () {
-            resumable.splice(0).forEach(iterator => {
-                iterator.outer.resume(previous)
-                paginators.unshift(iterator)
-            })
             let i = 0
             while (i < paginators.length && paginators[i].inner.length == paginators[i].index) {
                 const paginator = paginators[i]
@@ -26,9 +22,6 @@ module.exports = function (comparator, collections, reversed) {
                     if (outer.done) {
                         paginator.done = true
                         paginators.splice(i, 1)
-                        if (paginator.outer.resumable) {
-                            resumable.push(paginator)
-                        }
                         break
                     }
                     if (outer.value.length != 0) {

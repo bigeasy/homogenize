@@ -1,4 +1,4 @@
-require('proof')(4, async okay => {
+require('proof')(2, async okay => {
     const advance = require('advance')
     const homogenize = require('..')
     const merge = [[
@@ -24,7 +24,6 @@ require('proof')(4, async okay => {
 
         const gathered = []
         for await (const items of homogenize.forward(comparator, pages)) {
-            console.log(items)
             for (const item of items) {
                 gathered.push(item)
             }
@@ -42,32 +41,5 @@ require('proof')(4, async okay => {
             }
         }
         okay(gathered, merged.slice().reverse(), 'reverse')
-    }
-
-    {
-        const pages = merge.map(array => advance.forward(array))
-
-        const test = []
-
-        pages.push({
-            [Symbol.asyncIterator]: function () { return this },
-            resumable: true,
-            resume: function (key) {
-                test.push(key)
-            },
-            next: async function () {
-                return { done: true, values: null }
-            }
-        })
-
-        const gathered = []
-        for await (const items of homogenize.forward(comparator, pages)) {
-            for (const item of items) {
-                gathered.push(item)
-            }
-        }
-
-        okay(gathered, merged, 'resumable')
-        okay(test, [{ key: 1 }, { key: 8 }, { key: 10 }, { key: 11 }], 'resumed')
     }
 })
