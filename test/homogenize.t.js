@@ -22,10 +22,16 @@ require('proof')(2, async okay => {
     {
         const pages = merge.map(array => advance.forward(array))
 
-        const gathered = []
-        for await (const items of homogenize.forward(comparator, pages)) {
-            for (const item of items) {
-                gathered.push(item)
+        const gathered = [], promises = []
+        const iterator = homogenize.forward(comparator, pages)
+        while (! iterator.done) {
+            iterator.next(promises, items => {
+                for (const item of items) {
+                    gathered.push(item)
+                }
+            })
+            while (promises.length != 0) {
+                await promises.shift()
             }
         }
         okay(gathered, merged, 'forward')
@@ -34,10 +40,16 @@ require('proof')(2, async okay => {
     {
         const pages = merge.map(array => advance.reverse(array))
 
-        const gathered = []
-        for await (const items of homogenize.reverse(comparator, pages)) {
-            for (const item of items) {
-                gathered.push(item)
+        const gathered = [], promises = []
+        const iterator = homogenize.reverse(comparator, pages)
+        while (! iterator.done) {
+            iterator.next(promises, items => {
+                for (const item of items) {
+                    gathered.push(item)
+                }
+            })
+            while (promises.length != 0) {
+                await promises.shift()
             }
         }
         okay(gathered, merged.slice().reverse(), 'reverse')
