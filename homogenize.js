@@ -30,7 +30,7 @@ module.exports = function (comparator, iterators, direction) {
                     set done (done) {
                         iterators.shift()
                         if (iterators.length == 0) {
-                            iterator.done = done
+                            terminator.done = done
                         } else {
                             iterator.next(promises, consume, terminator)
                         }
