@@ -1,4 +1,5 @@
 require('proof')(2, async okay => {
+    const Trampoline = require('skip')
     const advance = require('advance')
     const homogenize = require('..')
     const merge = [[
@@ -22,16 +23,16 @@ require('proof')(2, async okay => {
     {
         const pages = merge.map(array => advance.forward(array))
 
-        const gathered = [], promises = []
+        const gathered = [], trampoline = new Trampoline
         const iterator = homogenize.forward(comparator, pages)
         while (! iterator.done) {
-            iterator.next(promises, items => {
+            iterator.next(trampoline, items => {
                 for (const item of items) {
                     gathered.push(item)
                 }
             })
-            while (promises.length != 0) {
-                await promises.shift()
+            while (trampoline.seek()) {
+                await trampoline.shift()
             }
         }
         okay(gathered, merged, 'forward')
@@ -40,16 +41,16 @@ require('proof')(2, async okay => {
     {
         const pages = merge.map(array => advance.reverse(array))
 
-        const gathered = [], promises = []
+        const gathered = [], trampoline = new Trampoline
         const iterator = homogenize.reverse(comparator, pages)
         while (! iterator.done) {
-            iterator.next(promises, items => {
+            iterator.next(trampoline, items => {
                 for (const item of items) {
                     gathered.push(item)
                 }
             })
-            while (promises.length != 0) {
-                await promises.shift()
+            while (trampoline.seek()) {
+                await trampoline.shift()
             }
         }
         okay(gathered, merged.slice().reverse(), 'reverse')

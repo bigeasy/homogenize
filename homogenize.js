@@ -10,21 +10,17 @@ module.exports = function (comparator, iterators, direction) {
     }
     const iterator = {
         done: false,
-        next: function (promises, consume, terminator = iterator) {
+        next: function (trampoline, consume, terminator = iterator) {
             let i = 0
             if (iterators[0].inner.length == iterators[0].index) {
-                iterators[0].outer.next(promises, function (items) {
+                iterators[0].outer.next(trampoline, function (items) {
                     if (items.length == 0) {
-                        // Let's not blow the stack if we are iterating over a
-                        // bunch of somehow empty pages.
-                        promises.push(async function () {
-                            iterator.next(promises, consume, terminator)
-                        } ())
+                        trampoline.push(() => iterator.next(trampoline, consume, terminator))
                     } else {
                         iterators[0].inner = items
                         iterators[0].index = 0
                         iterators.push(iterators.shift())
-                        iterator.next(promises, consume, terminator)
+                        trampoline.push(() => iterator.next(trampoline, consume, terminator))
                     }
                 }, {
                     set done (done) {
@@ -32,7 +28,7 @@ module.exports = function (comparator, iterators, direction) {
                         if (iterators.length == 0) {
                             terminator.done = done
                         } else {
-                            iterator.next(promises, consume, terminator)
+                            trampoline.push(() => iterator.next(trampoline, consume, terminator))
                         }
                     }
                 })
