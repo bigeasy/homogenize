@@ -15,12 +15,12 @@ module.exports = function (comparator, iterators, direction) {
             if (iterators[0].inner.length == iterators[0].index) {
                 iterators[0].outer.next(trampoline, function (items) {
                     if (items.length == 0) {
-                        trampoline.push(() => iterator.next(trampoline, consume, terminator))
+                        trampoline.sync(() => iterator.next(trampoline, consume, terminator))
                     } else {
                         iterators[0].inner = items
                         iterators[0].index = 0
                         iterators.push(iterators.shift())
-                        trampoline.push(() => iterator.next(trampoline, consume, terminator))
+                        trampoline.sync(() => iterator.next(trampoline, consume, terminator))
                     }
                 }, {
                     set done (done) {
@@ -28,7 +28,7 @@ module.exports = function (comparator, iterators, direction) {
                         if (iterators.length == 0) {
                             terminator.done = done
                         } else {
-                            trampoline.push(() => iterator.next(trampoline, consume, terminator))
+                            trampoline.sync(() => iterator.next(trampoline, consume, terminator))
                         }
                     }
                 })
