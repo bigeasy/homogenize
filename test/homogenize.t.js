@@ -1,5 +1,5 @@
 require('proof')(2, async okay => {
-    const Trampoline = require('skip')
+    const Trampoline = require('reciprocate')
     const advance = require('advance')
     const homogenize = require('..')
     const merge = [[

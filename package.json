@@ -26,7 +26,7 @@
     {
                             "advance":                      "3.0.0-alpha.3",
                             "proof":                        "^9.0.2",
-                            "skip":                         "0.1.1"
+                            "reciprocate":                  "0.0.1"
     },
     "scripts":
     {
