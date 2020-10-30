@@ -1,13 +1,9 @@
 const assert = require('assert')
 
-module.exports = function (comparator, iterators, direction) {
-    let previous = null
+module.exports = function (comparator, iterators, direction, gather) {
     iterators = iterators.map(iterator => {
         return { outer: iterator, inner: [], index: 0, done: false }
     })
-    function compare (left, right) {
-        return comparator(left.inner[left.index].key, right.inner[right.index].key) * direction
-    }
     const iterator = {
         done: false,
         next: function (trampoline, consume, terminator = iterator) {
@@ -33,14 +29,7 @@ module.exports = function (comparator, iterators, direction) {
                     }
                 })
             } else {
-                const gathered = []
-                do {
-                    iterators.sort(compare)
-                    gathered.push(iterators[0].inner[iterators[0].index++])
-                } while (iterators[0].inner.length != iterators[0].index)
-                assert.notEqual(gathered.length, 0)
-                previous = gathered[gathered.length - 1]
-                consume(gathered)
+                gather(iterators, consume)
             }
         }
     }

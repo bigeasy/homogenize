@@ -1,4 +1,5 @@
-require('proof')(2, async okay => {
+require('proof')(3, async okay => {
+    const ascension = require('ascension')
     const Trampoline = require('reciprocate')
     const advance = require('advance')
     const homogenize = require('..')
@@ -54,5 +55,65 @@ require('proof')(2, async okay => {
             }
         }
         okay(gathered, merged.slice().reverse(), 'reverse')
+    }
+
+    {
+        const pages = [
+            advance.forward([[{
+                key: [ 'a' ],
+                value: [ 'a' ],
+                items: [{ key: [ 'a', 0 ] }, { key: [ 'a', 2 ] }]
+            }], [{
+                key: [ 'b' ],
+                value: [ 'b' ],
+                items: [{ key: [ 'b', 3 ] }, { key: [ 'b', 4 ] }]
+            }, {
+                key: [ 'c' ],
+                value: [ 'c' ],
+                items: []
+            }]]),
+            advance.forward([[{
+                key: [ 'a' ],
+                value: [ 'a' ],
+                items: [{ key: [ 'a', 1 ] }, { key: [ 'a', 3 ] }]
+            }, {
+                key: [ 'b' ],
+                value: [ 'b' ],
+                items: [{ key: [ 'b', 1 ] }, { key: [ 'b', 2 ] }]
+            }, {
+                key: [ 'c' ],
+                value: [ 'c' ],
+                items: []
+            }]])
+        ]
+
+        const comparator = ascension([ String, Number ], object => object)
+
+        const gathered = [], trampoline = new Trampoline
+        const iterator = homogenize.map(comparator, pages)
+
+        while (! iterator.done) {
+            iterator.next(trampoline, items => {
+                for (const item of items) {
+                    gathered.push(item)
+                }
+            })
+            while (trampoline.seek()) {
+                await trampoline.shift()
+            }
+        }
+        okay(gathered, [{
+            key: [ 'a' ],
+            value: [ 'a' ],
+            items: [{ key: [ 'a', 0 ] }, { key: [ 'a', 1 ] }, { key: [ 'a', 2 ] }, { key: [ 'a', 3 ] }]
+        }, {
+            key: [ 'b' ],
+            value: [ 'b' ],
+            items: [{ key: [ 'b', 1 ] }, { key: [ 'b', 2 ] }, { key: [ 'b', 3 ] }, { key: [ 'b', 4 ] }]
+        }, {
+            key: [ 'c' ],
+            value: [ 'c' ],
+            items: []
+        }], 'merge')
     }
 })
