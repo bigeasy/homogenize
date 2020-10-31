@@ -6,7 +6,6 @@ module.exports = function (comparator, collections) {
         const got = []
         do {
             const set = iterators.map(iterator => iterator.inner[iterator.index++])
-            assert(set.slice(1).every((entry, index) => comparator(set[index].key, set[index + 1].key) == 0))
             const items = []
             got.push({
                 key: set[0].key,
