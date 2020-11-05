@@ -22,10 +22,10 @@ require('proof')(3, async okay => {
     }
 
     {
-        const pages = merge.map(array => advance.forward(array))
+        const pages = merge.map(array => advance(array))
 
         const gathered = [], trampoline = new Trampoline
-        const iterator = homogenize.forward(comparator, pages)
+        const iterator = homogenize(comparator, pages)
         while (! iterator.done) {
             iterator.next(trampoline, items => {
                 for (const item of items) {
@@ -40,10 +40,10 @@ require('proof')(3, async okay => {
     }
 
     {
-        const pages = merge.map(array => advance.reverse(array))
+        const pages = merge.map(array => advance(array, { reverse: true }))
 
         const gathered = [], trampoline = new Trampoline
-        const iterator = homogenize.reverse(comparator, pages)
+        const iterator = homogenize(comparator, pages)
         while (! iterator.done) {
             iterator.next(trampoline, items => {
                 for (const item of items) {
@@ -59,7 +59,7 @@ require('proof')(3, async okay => {
 
     {
         const pages = [
-            advance.forward([[{
+            advance([[{
                 key: [ 'a' ],
                 value: [ 'a' ],
                 items: [{ key: [ 'a', 0 ] }, { key: [ 'a', 2 ] }]
@@ -71,8 +71,8 @@ require('proof')(3, async okay => {
                 key: [ 'c' ],
                 value: [ 'c' ],
                 items: []
-            }]]),
-            advance.forward([[{
+            }]], { map: true }),
+            advance([[{
                 key: [ 'a' ],
                 value: [ 'a' ],
                 items: [{ key: [ 'a', 1 ] }, { key: [ 'a', 3 ] }]
@@ -84,13 +84,13 @@ require('proof')(3, async okay => {
                 key: [ 'c' ],
                 value: [ 'c' ],
                 items: []
-            }]])
+            }]], { map: true })
         ]
 
         const comparator = ascension([ String, Number ], object => object)
 
         const gathered = [], trampoline = new Trampoline
-        const iterator = homogenize.map(comparator, pages)
+        const iterator = homogenize(comparator, pages)
 
         while (! iterator.done) {
             iterator.next(trampoline, items => {

@@ -19,12 +19,14 @@
                             "type": "git",
                             "url": "bigeasy/homogenize"
     },
+    "main": "homogenize",
     "dependencies":
     {
+                            "mvcc":                         "2.0.0-alpha.2"
     },
     "devDependencies":
     {
-                            "advance":                      "3.0.0-alpha.3",
+                            "advance":                      "3.0.0-alpha.8",
                             "ascension":                    "2.0.0",
                             "proof":                        "^9.0.2",
                             "reciprocate":                  "0.0.2"
