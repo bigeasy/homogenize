@@ -1,6 +1,6 @@
 {
     "name":                 "homogenize",
-    "version":              "2.0.0-alpha.11",
+    "version":              "2.0.0-alpha.12",
     "description":
 
       "Iterate a collection of MVCC b-tree cursors choosing the most recent version of a record from each tree.",
@@ -19,7 +19,6 @@
                             "type": "git",
                             "url": "bigeasy/homogenize"
     },
-    "main": "homogenize",
     "dependencies":
     {
                             "mvcc":                         "2.0.0-alpha.2"
@@ -31,6 +30,7 @@
                             "proof":                        "^9.0.2",
                             "reciprocate":                  "0.0.2"
     },
+    "main":                 "homogenize",
     "scripts":
     {
                             "test": "proof test/*.t.js"
