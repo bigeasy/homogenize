@@ -87,7 +87,7 @@ require('proof')(3, async okay => {
             }]], { map: true })
         ]
 
-        const comparator = ascension([ String, Number ], object => object)
+        const comparator = ascension([ String, Number ])
 
         const gathered = [], trampoline = new Trampoline
         const iterator = homogenize(comparator, pages)
