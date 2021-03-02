@@ -12,7 +12,6 @@ function merge (comparator, direction) {
             gathered.push(iterators[0].inner[iterators[0].index++])
         } while (iterators[0].inner.length != iterators[0].index)
         assert.notEqual(gathered.length, 0)
-        gathered[gathered.length - 1]
         consume(gathered)
     }
 }
