@@ -16,23 +16,6 @@ function merge (comparator, direction) {
     }
 }
 
-function map (comparator, collections) {
-    return homogenize(comparator, collections, 1, (iterators, consume) => {
-        const got = []
-        do {
-            const set = iterators.map(iterator => iterator.inner[iterator.index++])
-            const items = []
-            got.push({
-                key: set[0].key,
-                value: set[0].value,
-                items: items.concat.apply(items, set.map(entry => entry.items))
-                            .sort((left, right) => comparator(left.key, right.key))
-            })
-        } while (iterators.every(iterator => iterator.inner.length != iterator.index))
-        consume(got)
-    })
-}
-
 function homogenize (type, iterators, gather) {
     iterators = iterators.map(iterator => {
         return { outer: iterator, inner: [], index: 0, done: false }
@@ -77,11 +60,9 @@ module.exports = function (comparator, iterators) {
         case mvcc.FORWARD: {
                 return homogenize(type, iterators, merge(comparator, 1))
             }
-            break
         case mvcc.REVERSE: {
                 return homogenize(type, iterators, merge(comparator, -1))
             }
-            break
         case mvcc.MAP: {
                 return homogenize(type, iterators, (iterators, consume) => {
                     const got = []
@@ -98,6 +79,5 @@ module.exports = function (comparator, iterators) {
                     consume(got)
                 })
             }
-            break
     }
 }
