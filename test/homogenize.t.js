@@ -71,6 +71,10 @@ require('proof')(3, async okay => {
                 key: [ 'c' ],
                 value: [ 'c' ],
                 items: []
+            }], [{
+                key: [ 'd' ],
+                value: [ 'd' ],
+                items: []
             }]], { map: true }),
             advance([[{
                 key: [ 'a' ],
@@ -83,6 +87,10 @@ require('proof')(3, async okay => {
             }, {
                 key: [ 'c' ],
                 value: [ 'c' ],
+                items: []
+            }, {
+                key: [ 'd' ],
+                value: [ 'd' ],
                 items: []
             }]], { map: true })
         ]
@@ -113,6 +121,10 @@ require('proof')(3, async okay => {
         }, {
             key: [ 'c' ],
             value: [ 'c' ],
+            items: []
+        }, {
+            key: [ 'd' ],
+            value: [ 'd' ],
             items: []
         }], 'merge')
     }

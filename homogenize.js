@@ -76,6 +76,7 @@ module.exports = function (comparator, iterators) {
                                         .sort((left, right) => comparator(left.key, right.key))
                         })
                     } while (iterators.every(iterator => iterator.inner.length != iterator.index))
+                    iterators.sort((left, right) => (left.inner.length > right.inner.length) - (left.inner.length < right.inner.length))
                     consume(got)
                 })
             }
