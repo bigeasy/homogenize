@@ -28,7 +28,7 @@
                             "advance":                      "3.0.0-alpha.9",
                             "ascension":                    "3.0.0-alpha.3",
                             "proof":                        "^9.0.2",
-                            "reciprocate":                  "0.0.7"
+                            "reciprocate":                  "0.0.8"
     },
     "main":                 "homogenize",
     "scripts":
