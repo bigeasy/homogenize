@@ -26,7 +26,7 @@
     "devDependencies":
     {
                             "advance":                      "3.0.0-alpha.10",
-                            "ascension":                    "3.0.0-alpha.5",
+                            "ascension":                    "3.0.0-alpha.7",
                             "proof":                        "^9.0.2",
                             "reciprocate":                  "0.0.8"
     },
