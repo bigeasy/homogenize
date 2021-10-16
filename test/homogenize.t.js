@@ -1,6 +1,6 @@
 require('proof')(3, async okay => {
     const ascension = require('ascension')
-    const Trampoline = require('reciprocate')
+    const { Trampoline } = require('reciprocate')
     const advance = require('advance')
     const homogenize = require('..')
     const merge = [[
